@@ -3,7 +3,7 @@
 -include .env
 export
 
-.PHONY: help install fmt lint types contracts test test-int check explore
+.PHONY: help install fmt lint types contracts test test-int check ci explore
 
 help: ## list available targets
 > @grep -E '^[a-z-]+:.*## ' Makefile | awk 'BEGIN {FS = ":.*## "} {printf "  %-10s %s\n", $$1, $$2}'
@@ -33,3 +33,11 @@ check: fmt lint types contracts test ## everything to run before a commit
 
 explore: ## peek at the market data
 > uv run python scripts/explore_data.py
+
+
+ci: ## all checks without modifying files (used by GitHub Actions)
+> uv run ruff format --check .
+> uv run ruff check .
+> uv run mypy
+> uv run lint-imports
+> uv run pytest -m "not integration"
