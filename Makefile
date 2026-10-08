@@ -41,3 +41,6 @@ ci: ## all checks without modifying files (used by GitHub Actions)
 > uv run mypy
 > uv run lint-imports
 > uv run pytest -m "not integration"
+
+frontier: ## closed-form efficient frontier on real data (writes reports/frontier.png)
+> uv run python scripts/frontier.py
