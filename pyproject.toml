@@ -1,0 +1,81 @@
+[project]
+name = "quen"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+authors = [
+    { name = "Krzysiek Bienias", email = "38161311+krzysiekbienias@users.noreply.github.com" }
+]
+requires-python = ">=3.13"
+dependencies = [
+    "numpy>=2.5.3",
+    "pandas>=3.0.6",
+    "pyyaml>=6.0.3",
+    "scipy>=1.18.1",
+]
+
+[project.scripts]
+quen = "quen:main"
+
+[build-system]
+requires = ["uv_build>=0.11.29,<0.12.0"]
+build-backend = "uv_build"
+
+[dependency-groups]
+dev = [
+    "hypothesis>=6.168.5",
+    "import-linter>=2.15",
+    "mypy>=2.4.0",
+    "pandas-stubs>=3.0.5.260914",
+    "pytest>=9.1.1",
+    "pytest-cov>=7.1.0",
+    "ruff>=0.16.10",
+    "types-pyyaml>=6.0.12.20260906",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "W", "F", "I", "B", "UP", "SIM", "N", "RUF", "PT", "LOG", "G", "NPY", "PD", "TC"]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = ["TC"]
+
+[tool.mypy]
+python_version = "3.12"
+strict = true
+warn_unreachable = true
+packages = ["quen"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra --strict-markers --strict-config"
+
+[tool.importlinter]
+root_package = "quen"
+
+[[tool.importlinter.contracts]]
+name = "Models, risk and analytics know nothing about where data comes from"
+type = "forbidden"
+source_modules = ["quen.models", "quen.risk", "quen.analytics"]
+forbidden_modules = ["quen.ingestion", "quen.validation", "quen.pipeline"]
+
+[[tool.importlinter.contracts]]
+name = "Domain is the dependency-free canonical core"
+type = "forbidden"
+source_modules = ["quen.domain"]
+forbidden_modules = ["quen.ingestion", "quen.validation", "quen.models", "quen.risk", "quen.analytics", "quen.pipeline"]
+
+[[tool.importlinter.contracts]]
+name = "Ingestion only reads data"
+type = "forbidden"
+source_modules = ["quen.ingestion"]
+forbidden_modules = ["quen.validation", "quen.models", "quen.risk", "quen.analytics", "quen.pipeline"]
+
+[[tool.importlinter.contracts]]
+name = "Validation does not depend on models or orchestration"
+type = "forbidden"
+source_modules = ["quen.validation"]
+forbidden_modules = ["quen.models", "quen.risk", "quen.analytics", "quen.pipeline"]
