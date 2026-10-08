@@ -11,6 +11,7 @@ from pathlib import Path
 import pytest
 
 from quen.ingestion import SqliteMarketDataSource
+from quen.validation import PriceValidator
 
 pytestmark = [
     pytest.mark.integration,
@@ -33,3 +34,12 @@ def test_closes_exist_for_every_active_equity(source: SqliteMarketDataSource) ->
     closes = source.equity_closes(tickers)
 
     assert set(closes["ticker"]) == set(tickers)
+
+
+def test_equity_universe_validates_into_a_clean_panel(source: SqliteMarketDataSource) -> None:
+    tickers = source.instruments("EQUITY")["provider_symbol"].tolist()
+
+    result = PriceValidator().validate(source.equity_closes(tickers))
+
+    assert set(result.panel.tickers) == set(tickers)
+    assert len(result.panel) >= 60
