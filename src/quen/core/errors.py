@@ -30,3 +30,19 @@ class DataValidationError(DataError):
     def __init__(self, message: str, report: object) -> None:
         super().__init__(message)
         self.report = report
+
+
+class EstimationError(QuenError):
+    """A statistical estimate could not be produced or is inconsistent."""
+
+
+class NotPositiveDefiniteError(EstimationError):
+    """Covariance matrix is not positive definite (collinear assets, or fewer dates than assets)."""
+
+
+class OptimizationError(QuenError):
+    """A portfolio optimisation failed."""
+
+
+class DegenerateFrontierError(OptimizationError):
+    """All assets have the same expected return (D = AC - B^2 = 0): no frontier to trace."""

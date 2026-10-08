@@ -25,6 +25,7 @@ build-backend = "uv_build"
 dev = [
     "hypothesis>=6.168.5",
     "import-linter>=2.15",
+    "matplotlib>=3.11.2",
     "mypy>=2.4.0",
     "pandas-stubs>=3.0.5.260914",
     "pytest>=9.1.1",
@@ -79,3 +80,7 @@ name = "Validation does not depend on models or orchestration"
 type = "forbidden"
 source_modules = ["quen.validation"]
 forbidden_modules = ["quen.models", "quen.risk", "quen.analytics", "quen.pipeline"]
+
+[[tool.mypy.overrides]]
+module = ["matplotlib.*", "scipy.*"]
+ignore_missing_imports = true
